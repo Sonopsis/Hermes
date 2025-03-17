@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonopsis - Speech Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sonopsis - Real-Time Speech Analyzer</h1>
+    <p>Select a communication mode:</p>
+    <select id="mode">
+        <option value="formal">Formal</option>
+        <option value="casual">Casual</option>
+        <option value="sales">Sales</option>
+    </select>
+    <br><br>
+    <button onclick="startRecording()">Start Recording</button>
+    <button onclick="stopRecording()">Stop Recording</button>
+    <button onclick="analyzeSpeech()">Analyze Speech</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function startRecording() {
+            fetch('/start_recording', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => alert(data.message));
+        }
+
+        function stopRecording() {
+            fetch('/stop_recording', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => alert(data.message));
+        }
+
+        function analyzeSpeech() {
+            const mode = document.getElementById('mode').value;
+            
+            fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `mode=${mode}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = 
+                    `<strong>Transcript:</strong> ${data.transcript}<br><br>
+                     <strong>Feedback:</strong> ${data.feedback}`;
+            });
+        }
+    </script>
+</body>
+</html>

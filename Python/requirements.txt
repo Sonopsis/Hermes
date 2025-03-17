@@ -1,0 +1,7 @@
+speechrecognition
+textblob
+numpy
+flask
+sounddevice
+wave
+werkzeug
